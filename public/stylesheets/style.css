@@ -1,0 +1,85 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+.question-area {
+  margin: 20px 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ab-buttons {
+  display: flex;
+}
+
+.cd-buttons {
+  display: flex;
+}
+
+.options button {
+  display: block;
+  width: 400px;
+  margin: 10px;
+}
+
+.progress-bar,
+.timer {
+  margin: 10px 0;
+}
+
+.loading-screen {
+  margin: 20px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  background-color: #ddd;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 30px;
+  background-color: #4caf50;
+}
+
+.progress-bar-container-top {
+  width: 100%;
+  background-color: #ddd;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.progress-bar-container-top .progress-bar {
+  width: auto;
+  height: 20px;
+  background-color: #4caf50;
+}
+
+#moment-player {
+  height: 400px;
+}

@@ -1,0 +1,58 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title NBA TopShot Clock
+    link(rel="stylesheet" href="./stylesheets/style.css")
+  body
+    .start-screen
+      h1 NBA TopShot Clock
+      button(onclick="startLoading()") Start The Clock
+      //- button(onclick="showInstructions()") Instructions
+      //- button(onclick="showHighScores()") High Scores
+
+    .instructions-screen(style="display:none;")
+      h1 Instructions
+      p Answer the questions within the time limit. Each correct answer earns you points.
+      button(onclick="backToMenu()") Back to Main Menu
+
+    .loading-screen(style="display:none;")
+      h1 Loading Plays...
+      .progress-bar-container
+        .progress-bar(id="progress-bar")
+
+    .quiz-screen(style="display:none;")
+      .progress-bar-container-top
+        .progress-bar
+          | Round 
+          span#current-question 1 
+          |  of 
+          span#total-questions 30
+      .score
+        span#live-score Score 0
+        span#streak-bonus Streak Bonus 0
+      .question-area
+        h2#question-text Question text here
+        video#moment-player
+        .options
+          .ab-buttons
+            button(onclick="selectOption(0)") Option 1
+            button(onclick="selectOption(1)") Option 2
+          .cd-buttons
+            button(onclick="selectOption(2)") Option 3
+            button(onclick="selectOption(3)") Option 4
+      .timer
+        | Time left: 
+        span#time-left 24 
+        |  seconds
+      //- button(onclick="submitAnswer()") Submit Answer
+
+    .result-screen(style="display:none;")
+      h1 Time's up!
+      p Your Score: 
+        span#score 0
+      //- button(onclick="playAgain()") Play Again
+      //- button(onclick="backToMenu()") Main Menu
+
+    script(src="./javascripts/script.js")
