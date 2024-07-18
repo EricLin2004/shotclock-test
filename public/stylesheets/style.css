@@ -23,6 +23,10 @@ h2 {
 
 .question-area {
   margin: 20px 0;
+  
+  @media (max-width: 800px) {
+    margin: 0px;
+  }
 }
 
 .options {
@@ -46,6 +50,7 @@ h2 {
 
   @media (max-width: 800px) {
     width: 100%;
+    margin: 0px;
   }
 }
 
@@ -56,6 +61,10 @@ h2 {
 
 .loading-screen {
   margin: 20px;
+
+  @media (max-width: 800px) {
+    margin: 0px;
+  }
 }
 
 .progress-bar-container {
