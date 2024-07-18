@@ -92,3 +92,8 @@ h2 {
 .hidden {
   display: none;
 }
+
+.submit-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+}

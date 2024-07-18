@@ -38,7 +38,7 @@ function resetVideoContainer() {
     vc.removeChild(vc.firstChild);
   }
 
-  console.log('questions: ', questions);
+  // console.log('questions: ', questions);
 
   for(let i=0; i < questions.length; i++) {
     var vidEl = document.createElement('video');
@@ -46,14 +46,12 @@ function resetVideoContainer() {
     srcEl.setAttribute('src', questions[i].videoUrl);
     srcEl.setAttribute('type', 'video/mp4');
     vidEl.appendChild(srcEl);
-    vidEl.load();
-
     vidEl.className = 'hidden';
 
     vc.appendChild(vidEl);
   }
 
-  console.log('vc: ', vc);
+  vc.firstChild.load();
 }
 
 async function startLoading() {
@@ -62,7 +60,7 @@ async function startLoading() {
   
   const response = await fetch('/new');
   let roundsRes = await response.json();
-  console.log('roundsRes: ', roundsRes);
+  // console.log('roundsRes: ', roundsRes);
   questions = roundsRes.rounds;
   gameConfig = roundsRes.config;
 
@@ -105,7 +103,7 @@ async function showHighScores() {
 
   for(let i=0; i < scoresBody.scores.length; i++) {
     let newEl = document.createElement('p');
-    newEl.textContent = scoresBody.scores[i];
+    newEl.textContent = scoresBody.scores[i].username + ': ' + scoresBody.scores[i].score;
 
     listScores.appendChild(newEl);
   }
@@ -153,6 +151,12 @@ function loadQuestion() {
     
     // Auto play
     vidEl.play();
+
+    // Pre load next video
+    var nextVidEl = document.querySelector('.videos-container').children[currentQuestionIndex+1];
+    if (nextVidEl) {
+      nextVidEl.load();
+    }
 
     const options = document.querySelectorAll('.options button');
     options.forEach((button, index) => {
@@ -202,12 +206,16 @@ function submitAnswer(pickedOption) {
   loadQuestion();
 }
 
-async function endQuiz() {
+function endQuiz() {
   clearInterval(timerInterval);
   resetScreens();
 
-  document.querySelector('.result-screen').style.display = 'block';
   document.getElementById('score').textContent = score;
+  document.querySelector('.result-screen').style.display = 'block';
+}
+
+async function submitScore() {
+  let username = document.querySelector('.username').value;
 
   if (score > 0) {
     // Post score
@@ -217,9 +225,14 @@ async function endQuiz() {
         'Content-Type': 'application/json'
       },
       method: 'POST',
-      body: JSON.stringify({ score })
+      body: JSON.stringify({ 
+        score,
+        username
+      })
     }); 
   }
+
+  backToMenu();
 }
 
 function playAgain() {

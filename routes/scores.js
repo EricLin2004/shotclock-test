@@ -5,12 +5,8 @@ let scores = [];
 
 // Post new score
 router.post('/', (req, res, next) => {
-    console.log('body: ', req.body);
-    scores.push(req.body.score);
-
+    scores.push(req.body);
     scores = scores.sort();
-
-    console.log('newScores: ', scores);
 
     res.sendStatus(200);
 });

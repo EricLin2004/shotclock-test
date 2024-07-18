@@ -58,6 +58,9 @@ html(lang="en")
       h1 Time's up!
       p Your Score: 
         span#score 0
+      .submit-container
+        input.username(type="text" placeholder="name")
+        button.submit-btn(onclick="submitScore()") Submit Score
       button(onclick="playAgain()") Play Again
       button(onclick="showHighScores()") Show High Scores
       button(onclick="backToMenu()") Main Menu
