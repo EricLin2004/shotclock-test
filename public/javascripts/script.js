@@ -133,7 +133,7 @@ function startQuiz() {
 function loadQuestion() {
   if (currentQuestionIndex < gameConfig.numRounds) {
     const question = questions[currentQuestionIndex];
-    document.getElementById('question-text').textContent = 'Round ' + (currentQuestionIndex);
+    document.getElementById('question-text').textContent = 'Round ' + (currentQuestionIndex+1);
     document.getElementById('live-score').textContent = 'Score: ' + score;
     document.getElementById('streak-bonus').textContent = ' |  Streak Bonus: ' + streakBonus;
 

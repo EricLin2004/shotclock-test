@@ -43,6 +43,10 @@ h2 {
   display: block;
   width: 400px;
   margin: 10px;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 }
 
 .progress-bar,
@@ -87,6 +91,10 @@ h2 {
 .active {
   height: 400px;
   display: block;
+
+  @media (max-width: 800px) {
+    height: 300px;
+  }
 }
 
 .hidden {
