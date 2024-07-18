@@ -16,6 +16,17 @@ const shuffleArray = array => {
   }
 }
 
+function keyPressEvent(event) {
+  if (
+    event.code == 'Digit1' ||
+    event.code == 'Digit2' ||
+    event.code == 'Digit3' ||
+    event.code == 'Digit4'
+  ) {
+    selectOption(parseInt(event.code[event.code.length-1])-1);
+  }
+}
+
 function resetScreens() {
   document.querySelector('.loading-screen').style.display = 'none';
   document.querySelector('.quiz-screen').style.display = 'none';
@@ -29,6 +40,8 @@ function resetGameState() {
   score = 0;
   streakBonus = 0;
   questions = generateRandomQuestions(gameConfig.numRounds)
+
+  document.querySelector('body').removeEventListener('keyup', keyPressEvent);
 }
 
 function resetVideoContainer() {
@@ -115,17 +128,7 @@ function backToMenu() {
 }
 
 function startQuiz() {
-  addEventListener('keyup', (event) => {
-    if (
-      event.code == 'Digit1' ||
-      event.code == 'Digit2' ||
-      event.code == 'Digit3' ||
-      event.code == 'Digit4'
-    ) {
-      selectOption(parseInt(event.code[event.code.length-1])-1);
-    }
-  });
-
+  document.querySelector('body').addEventListener('keyup', keyPressEvent);
   loadQuestion();
   startTimer();
 }
@@ -190,6 +193,7 @@ function resetTimer() {
 }
 
 function selectOption(option) {
+  console.log('select option');
   submitAnswer(option);
 }
 
@@ -204,6 +208,7 @@ function submitAnswer(pickedOption) {
   }
 
   currentQuestionIndex++;
+  console.log(currentQuestionIndex);
   loadQuestion();
 }
 
