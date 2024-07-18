@@ -147,6 +147,7 @@ function loadQuestion() {
     }
 
     var vidEl = document.querySelector('.videos-container').children[currentQuestionIndex];
+    vidEl.setAttribute('playsinline', true);
     vidEl.className = 'active';
     
     // Auto play
