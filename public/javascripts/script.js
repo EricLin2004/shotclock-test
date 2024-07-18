@@ -31,9 +31,33 @@ function resetGameState() {
   questions = generateRandomQuestions(gameConfig.numRounds)
 }
 
+function resetVideoContainer() {
+  var vc = document.querySelector('.videos-container');
+
+  while (vc.firstChild) {
+    vc.removeChild(vc.firstChild);
+  }
+
+  console.log('questions: ', questions);
+
+  for(let i=0; i < questions.length; i++) {
+    var vidEl = document.createElement('video');
+    var srcEl = document.createElement('source');
+    srcEl.setAttribute('src', questions[i].videoUrl);
+    srcEl.setAttribute('type', 'video/mp4');
+    vidEl.appendChild(srcEl);
+    vidEl.load();
+
+    vidEl.className = 'hidden';
+
+    vc.appendChild(vidEl);
+  }
+
+  console.log('vc: ', vc);
+}
+
 async function startLoading() {
   resetScreens();
-
   document.querySelector('.loading-screen').style.display = 'block';
   
   const response = await fetch('/new');
@@ -43,6 +67,7 @@ async function startLoading() {
   gameConfig = roundsRes.config;
 
   resetGameState();
+  resetVideoContainer();
 
   let progressBar = document.getElementById('progress-bar');
   let width = 0;
@@ -54,7 +79,7 @@ async function startLoading() {
       width++;
       progressBar.style.width = width + '%';
     }
-  }, 20);
+  }, 50);
 }
 
 function loadQuestions() {
@@ -62,7 +87,7 @@ function loadQuestions() {
     resetScreens();
     document.querySelector('.quiz-screen').style.display = 'block';
     startQuiz();
-  }, 1000);
+  }, 3000);
 }
 
 async function showHighScores() {
@@ -82,7 +107,6 @@ async function showHighScores() {
     let newEl = document.createElement('p');
     newEl.textContent = scoresBody.scores[i];
 
-    console.log('appending child: ', newEl);
     listScores.appendChild(newEl);
   }
 }
@@ -120,19 +144,15 @@ function loadQuestion() {
     var video = document.getElementById('moment-player');
 
     // Clear video
-    while (video.firstChild) {
-      video.removeChild(video.firstChild);
+    if (document.querySelector('video.active')) {
+      document.querySelector('video.active').className = 'hidden';
     }
 
-    // Set video source
-    var source = document.createElement('source');
-    source.setAttribute('src', question.videoUrl);
-    source.setAttribute('type', 'video/mp4');
-    video.appendChild(source);
-
+    var vidEl = document.querySelector('.videos-container').children[currentQuestionIndex];
+    vidEl.className = 'active';
+    
     // Auto play
-    video.load();
-    video.play();
+    vidEl.play();
 
     const options = document.querySelectorAll('.options button');
     options.forEach((button, index) => {
