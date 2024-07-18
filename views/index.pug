@@ -10,12 +10,17 @@ html(lang="en")
       h1 NBA TopShot Clock
       button(onclick="startLoading()") Start The Clock
       //- button(onclick="showInstructions()") Instructions
-      //- button(onclick="showHighScores()") High Scores
+      button(onclick="showHighScores()") High Scores
 
     .instructions-screen(style="display:none;")
       h1 Instructions
       p Answer the questions within the time limit. Each correct answer earns you points.
       button(onclick="backToMenu()") Back to Main Menu
+
+    .high-scores(style="display:none;")
+      h1 High Scores
+      .list-scores
+      button(onclick="backToMenu()") Main Menu
 
     .loading-screen(style="display:none;")
       h1 Loading Plays...
@@ -28,7 +33,7 @@ html(lang="en")
           | Round 
           span#current-question 1 
           |  of 
-          span#total-questions 30
+          span#total-questions 20
       .score
         span#live-score Score 0
         span#streak-bonus Streak Bonus 0
@@ -52,7 +57,8 @@ html(lang="en")
       h1 Time's up!
       p Your Score: 
         span#score 0
-      //- button(onclick="playAgain()") Play Again
-      //- button(onclick="backToMenu()") Main Menu
+      button(onclick="playAgain()") Play Again
+      button(onclick="showHighScores()") Show High Scores
+      button(onclick="backToMenu()") Main Menu
 
     script(src="./javascripts/script.js")

@@ -16,8 +16,24 @@ const shuffleArray = array => {
   }
 }
 
-async function startLoading() {
+function resetScreens() {
+  document.querySelector('.loading-screen').style.display = 'none';
+  document.querySelector('.quiz-screen').style.display = 'none';
+  document.querySelector('.high-scores').style.display = 'none';
+  document.querySelector('.result-screen').style.display = 'none';
   document.querySelector('.start-screen').style.display = 'none';
+}
+
+function resetGameState() {
+  currentQuestionIndex = 0;
+  score = 0;
+  streakBonus = 0;
+  questions = generateRandomQuestions(gameConfig.numRounds)
+}
+
+async function startLoading() {
+  resetScreens();
+
   document.querySelector('.loading-screen').style.display = 'block';
   
   const response = await fetch('/new');
@@ -25,6 +41,8 @@ async function startLoading() {
   console.log('roundsRes: ', roundsRes);
   questions = roundsRes.rounds;
   gameConfig = roundsRes.config;
+
+  resetGameState();
 
   let progressBar = document.getElementById('progress-bar');
   let width = 0;
@@ -41,11 +59,37 @@ async function startLoading() {
 
 function loadQuestions() {
   setTimeout(() => {
-    questions = generateRandomQuestions(gameConfig.numRounds);
-    document.querySelector('.loading-screen').style.display = 'none';
+    resetScreens();
     document.querySelector('.quiz-screen').style.display = 'block';
     startQuiz();
-  }, 500); // Simulate a 15-second delay in total
+  }, 1000);
+}
+
+async function showHighScores() {
+  resetScreens();
+  document.querySelector('.high-scores').style.display = 'block';
+  var listScores = document.querySelector('.list-scores');
+
+  // Clear board
+  while (listScores.firstChild) {
+    listScores.removeChild(listScores.firstChild);
+  }
+
+  let scoresRes = await fetch('/scores');
+  let scoresBody = await scoresRes.json();
+
+  for(let i=0; i < scoresBody.scores.length; i++) {
+    let newEl = document.createElement('p');
+    newEl.textContent = scoresBody.scores[i];
+
+    console.log('appending child: ', newEl);
+    listScores.appendChild(newEl);
+  }
+}
+
+function backToMenu() {
+  resetScreens();
+  document.querySelector('.start-screen').style.display = 'block';
 }
 
 function startQuiz() {
@@ -60,8 +104,6 @@ function startQuiz() {
     }
   });
 
-  currentQuestionIndex = 0;
-  score = 0;
   loadQuestion();
   startTimer();
 }
@@ -69,7 +111,7 @@ function startQuiz() {
 function loadQuestion() {
   if (currentQuestionIndex < gameConfig.numRounds) {
     const question = questions[currentQuestionIndex];
-    document.getElementById('question-text').textContent = 'Round ' + (currentQuestionIndex+1);
+    document.getElementById('question-text').textContent = 'Round ' + (currentQuestionIndex);
     document.getElementById('live-score').textContent = 'Score: ' + score;
     document.getElementById('streak-bonus').textContent = ' |  Streak Bonus: ' + streakBonus;
 
@@ -96,7 +138,7 @@ function loadQuestion() {
     options.forEach((button, index) => {
       button.textContent = (index+1) + '. ' + question.options[index];
     });
-    document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+    document.getElementById('current-question').textContent = currentQuestionIndex;
     document.getElementById('total-questions').textContent = gameConfig.numRounds;
   } else {
     endQuiz();
@@ -138,27 +180,33 @@ function submitAnswer(pickedOption) {
 
   currentQuestionIndex++;
   loadQuestion();
-  // resetTimer();
 }
 
-function endQuiz() {
+async function endQuiz() {
   clearInterval(timerInterval);
+  resetScreens();
 
-  document.querySelector('.quiz-screen').style.display = 'none';
   document.querySelector('.result-screen').style.display = 'block';
   document.getElementById('score').textContent = score;
+
+  if (score > 0) {
+    // Post score
+    const response = await fetch('/scores', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({ score })
+    }); 
+  }
 }
 
 function playAgain() {
-  document.querySelector('.result-screen').style.display = 'none';
-  document.querySelector('.quiz-screen').style.display = 'block';
-  questions = generateRandomQuestions(gameConfig.numRounds);
-  startQuiz();
+  startLoading();
 }
 
 function generateRandomQuestions(count) {
-  // Generate or fetch `count` random questions
-  // This is a placeholder function
   let randomQuestions = [];
 
   for (let i=0; i<count; i++) {
@@ -185,8 +233,4 @@ function generateRandomQuestions(count) {
   }
 
   return randomQuestions;
-}
-
-function calculateScore() {
-
 }
