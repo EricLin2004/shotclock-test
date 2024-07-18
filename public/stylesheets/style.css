@@ -4,6 +4,7 @@ body {
   background-color: #f0f0f0;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 button {
@@ -50,7 +51,7 @@ h2 {
 
   @media (max-width: 800px) {
     width: 100%;
-    margin: 0px;
+    padding: 10px 0px;
   }
 }
 
@@ -61,10 +62,6 @@ h2 {
 
 .loading-screen {
   margin: 20px;
-
-  @media (max-width: 800px) {
-    margin: 0px;
-  }
 }
 
 .progress-bar-container {
