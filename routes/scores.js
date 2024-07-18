@@ -12,7 +12,8 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-    res.send({ scores });
+    console.log('scores: ', scores);
+    res.send({ scores: scores.slice(0, 20) });
 });
 
 module.exports = router;

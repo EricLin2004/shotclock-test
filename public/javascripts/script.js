@@ -103,7 +103,7 @@ async function showHighScores() {
 
   for(let i=0; i < scoresBody.scores.length; i++) {
     let newEl = document.createElement('p');
-    newEl.textContent = scoresBody.scores[i].username + ': ' + scoresBody.scores[i].score;
+    newEl.textContent = (i+1) + '. ' + scoresBody.scores[i].username + ': ' + scoresBody.scores[i].score;
 
     listScores.appendChild(newEl);
   }
