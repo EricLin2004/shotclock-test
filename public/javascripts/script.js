@@ -221,7 +221,13 @@ function endQuiz() {
 }
 
 async function submitScore() {
+  backToMenu();
+
   let username = document.querySelector('.username').value;
+
+  if (username == '') {
+    username = 'anon#' + crypto.randomUUID().slice(0,8);
+  }
 
   if (score > 0) {
     // Post score
@@ -237,8 +243,6 @@ async function submitScore() {
       })
     }); 
   }
-
-  backToMenu();
 }
 
 function playAgain() {
