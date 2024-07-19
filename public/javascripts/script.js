@@ -193,7 +193,6 @@ function resetTimer() {
 }
 
 function selectOption(option) {
-  console.log('select option');
   submitAnswer(option);
 }
 
@@ -204,11 +203,12 @@ function submitAnswer(pickedOption) {
     score += 3 + streakBonus;
     streakBonus += 0.5;
   } else {
+    score -= 1;
+    score = score < 0 ? 0 : score;
     streakBonus = 0;
   }
 
   currentQuestionIndex++;
-  console.log(currentQuestionIndex);
   loadQuestion();
 }
 
