@@ -6,6 +6,8 @@ html(lang="en")
     title NBA TopShot Clock
     link(rel="stylesheet" href="./stylesheets/style.css")
   body
+    .last-round-id
+      p
     .start-screen
       h1 NBA TopShot Clock
       button(onclick="startLoading()") Start The Clock
@@ -52,12 +54,13 @@ html(lang="en")
         | Time left: 
         span#time-left 24 
         |  seconds
-      //- button(onclick="submitAnswer()") Submit Answer
 
     .result-screen(style="display:none;")
       h1 Time's up!
       p Your Score: 
         span#score 0
+      p.code-results Keep this code for rewards (click to copy to clipboard): 
+        span#round-id
       .submit-container
         input.username(type="text" placeholder="name")
         button.submit-btn(onclick="submitScore()") Submit Score

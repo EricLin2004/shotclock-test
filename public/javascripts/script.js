@@ -5,6 +5,7 @@ let timerInterval;
 let questions;
 let streakBonus = 0;
 let pickedAnswer;
+let roundID;
 
 // Fisher-Yates shuffle
 const shuffleArray = array => {
@@ -33,6 +34,7 @@ function resetScreens() {
   document.querySelector('.high-scores').style.display = 'none';
   document.querySelector('.result-screen').style.display = 'none';
   document.querySelector('.start-screen').style.display = 'none';
+  document.querySelector('.last-round-id p').style.display = 'none';
 }
 
 function resetGameState() {
@@ -40,8 +42,10 @@ function resetGameState() {
   score = 0;
   streakBonus = 0;
   questions = generateRandomQuestions(gameConfig.numRounds)
+  roundID = crypto.randomUUID();
 
   document.querySelector('body').removeEventListener('keyup', keyPressEvent);
+  document.getElementById('round-id').removeEventListener('click', copyClipboardEvent);
 }
 
 function resetVideoContainer() {
@@ -50,8 +54,6 @@ function resetVideoContainer() {
   while (vc.firstChild) {
     vc.removeChild(vc.firstChild);
   }
-
-  // console.log('questions: ', questions);
 
   for(let i=0; i < questions.length; i++) {
     var vidEl = document.createElement('video');
@@ -73,7 +75,6 @@ async function startLoading() {
   
   const response = await fetch('/new');
   let roundsRes = await response.json();
-  // console.log('roundsRes: ', roundsRes);
   questions = roundsRes.rounds;
   gameConfig = roundsRes.config;
 
@@ -124,6 +125,10 @@ async function showHighScores() {
 
 function backToMenu() {
   resetScreens();
+  if (roundID) {
+    document.querySelector('.last-round-id p').textContent = 'Keep this code: ' + roundID;
+  }
+
   document.querySelector('.start-screen').style.display = 'block';
 }
 
@@ -212,21 +217,32 @@ function submitAnswer(pickedOption) {
   loadQuestion();
 }
 
+async function copyClipboardEvent() {
+  try {
+    await navigator.clipboard.writeText(roundID)
+  } catch (error) {
+    console.error('Could not copy code to clipboard: ', error.message);
+  }
+}
+
 function endQuiz() {
   clearInterval(timerInterval);
   resetScreens();
 
+  let roundIDEl = document.getElementById('round-id');
+  roundIDEl.textContent = roundID;
+  roundIDEl.addEventListener('click', copyClipboardEvent);
+
   document.getElementById('score').textContent = score;
+  document.querySelector('.submit-container').style.display = 'block';
   document.querySelector('.result-screen').style.display = 'block';
 }
 
 async function submitScore() {
-  backToMenu();
-
+  document.querySelector('.submit-container').style.display = 'none';
   let username = document.querySelector('.username').value;
-
   if (username == '') {
-    username = 'anon#' + crypto.randomUUID().slice(0,8);
+    username = 'anon#' + roundID.slice(0,8);
   }
 
   if (score > 0) {
@@ -239,9 +255,11 @@ async function submitScore() {
       method: 'POST',
       body: JSON.stringify({ 
         score,
-        username
+        roundID,
+        questions,
+        username,
       })
-    }); 
+    });
   }
 }
 
